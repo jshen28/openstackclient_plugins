@@ -32,10 +32,11 @@ class GetServerNetwork(command.ShowOne):
     def take_action(self, parsed_args):
         compute_client = self.app.client_manager.compute
         server = utils.find_resource(compute_client.servers, parsed_args.server)
+        host = getattr(server, 'OS-EXT-SRV-ATTR:host', None)
         network_client = self.app.client_manager.network
         print(server.name)
         for port in network_client.ports(device_id=server.id):
             logging.debug(dir(port))
 
-        colume_names = ('name', 'port')
-        return colume_names, (server.name, port.fixed_ips)
+        colume_names = ('name', 'host', 'port')
+        return colume_names, (server.name, host, port.fixed_ips)
