@@ -11,8 +11,7 @@ setup(
     version='0.1',
     description='test openstackclient plugin',
     install_requires=[
-        "pecan",
-        "sqlalchemy"
+        "openstackclient"
     ],
     entry_points={
         "openstack.identity.v3": [
