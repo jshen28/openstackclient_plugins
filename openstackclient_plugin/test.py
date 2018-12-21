@@ -30,5 +30,6 @@ class GetServerNetwork(command.Command):
         return parser
 
     def take_action(self, parsed_args):
-        print("Hello World")
-        print(parsed_args.server)
+        compute_client = self.app.client_manager.compute
+        server = utils.find_resource(compute_client.servers, parsed_args.server)
+        print(server.name)
