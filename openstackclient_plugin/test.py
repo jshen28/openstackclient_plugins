@@ -18,7 +18,7 @@ from openstackclient.identity import common as identity_common
 from openstackclient.network import common as network_common
 
 
-class GetServerNetwork(command.Command):
+class GetServerNetwork(command.ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(GetServerNetwork, self).get_parser(prog_name)
@@ -35,4 +35,7 @@ class GetServerNetwork(command.Command):
         network_client = self.app.client_manager.network
         print(server.name)
         for port in network_client.ports(device_id=server.id):
-            print(port.id)
+            logging.debug(dir(port))
+
+        colume_names = ('name', 'port')
+        return colume_names, (server.name, port.fixed_ips)
