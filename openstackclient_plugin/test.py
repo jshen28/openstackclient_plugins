@@ -34,4 +34,5 @@ class GetServerNetwork(command.Command):
         server = utils.find_resource(compute_client.servers, parsed_args.server)
         network_client = self.app.client_manager.network
         print(server.name)
-        print(network_client.ports(device_id=server.id).id)
+        for port in network_client.ports(device_id=server.id):
+            print(port.id)
