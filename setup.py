@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import random
 try:
     from setuptools import setup, find_packages
 except ImportError:
@@ -9,6 +10,7 @@ except ImportError:
 setup(
     name='openstackclient_plugin',
     description='test openstackclient plugin',
+    version=str(random.randint(10, 1000)),
     install_requires=[
         "openstackclient"
     ],
