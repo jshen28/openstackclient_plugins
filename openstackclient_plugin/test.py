@@ -14,8 +14,6 @@ from oslo_utils import timeutils
 import six
 
 from openstackclient.i18n import _
-from openstackclient.identity import common as identity_common
-from openstackclient.network import common as network_common
 
 
 class GetServerNetwork(command.ShowOne):
@@ -31,12 +29,19 @@ class GetServerNetwork(command.ShowOne):
 
     def take_action(self, parsed_args):
         compute_client = self.app.client_manager.compute
+        network_client = self.app.client_manager.network
         server = utils.find_resource(compute_client.servers, parsed_args.server)
         host = getattr(server, 'OS-EXT-SRV-ATTR:host', None)
-        network_client = self.app.client_manager.network
-        print(server.name)
+
+        # assume that server got single nic
+        ports, networks = list(), list()
         for port in network_client.ports(device_id=server.id):
             logging.debug(dir(port))
+            network = network_client.get_network(port.network_id)
+            ports.append(port)
+            networks.append(network)
 
-        colume_names = ('name', 'host', 'port')
-        return colume_names, (server.name, host, port.fixed_ips)
+        colume_names = ('name', 'host', 'ip', 'nework', 'port')
+        return colume_names, (
+            server.name, host, '\n'.join([','.join([j.get('ip_address') for j in i.fixed_ips]) for i in ports]),
+            '\n'.join([i.id for i in networks]), '\n'.join([i.id for i in ports]))
