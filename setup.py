@@ -8,7 +8,6 @@ except ImportError:
 
 setup(
     name='openstackclient_plugin',
-    version='0.1',
     description='test openstackclient plugin',
     install_requires=[
         "openstackclient"
