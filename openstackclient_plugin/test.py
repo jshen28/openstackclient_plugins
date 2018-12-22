@@ -49,7 +49,7 @@ class GetServerNetwork(command.ShowOne):
             dhcp_agents.append(','.join([i.host for i in agents]))
 
             # generalize to multiple subnets situation
-            dhcp_ports.extend([(getattr(i, 'binding:host_id'), i.mac_address) for i in network_client.ports(**{
+            dhcp_ports.extend([(i.binding_host_id, i.mac_address) for i in network_client.ports(**{
                 "device_owner": "network:dhcp",
                 "network_id": network.id
             })])
@@ -60,7 +60,7 @@ class GetServerNetwork(command.ShowOne):
                 "network_id": network.id
             })
             routers.extend([
-                (get_router(network_client, i.device_id).id, getattr(i, 'binding:host_id')) for i in router_ports
+                (get_router(network_client, i.device_id).id, getattr(i, 'binding_host_id')) for i in router_ports
             ])
 
             ports.append(port)
