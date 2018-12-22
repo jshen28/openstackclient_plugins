@@ -49,7 +49,7 @@ class GetServerNetwork(command.ShowOne):
             dhcp_agents.append(','.join([i.host for i in agents]))
 
             # generalize to multiple subnets situation
-            dhcp_ports.extend([(i.binding_host_id, i.mac_address) for i in network_client.ports(**{
+            dhcp_ports.extend([(i.binding_host_id, i.id, i.mac_address) for i in network_client.ports(**{
                 "device_owner": "network:dhcp",
                 "network_id": network.id
             })])
