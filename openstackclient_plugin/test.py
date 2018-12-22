@@ -38,7 +38,7 @@ class GetServerNetwork(command.ShowOne):
         for port in network_client.ports(device_id=server.id):
             network = network_client.get_network(port.network_id)
             agents = network_client.network_hosting_dhcp_agents(network)
-            dhcp_agents.extend([i.name for i in agents])
+            dhcp_agents.extend([i.host for i in agents])
             ports.append(port)
             logging.debug(dir(port))
             networks.append(network)
@@ -46,5 +46,5 @@ class GetServerNetwork(command.ShowOne):
         colume_names = ('name', 'host', 'ip', 'nework', 'dhcp-agents', 'port')
         return colume_names, (
             server.name, host, '\n'.join([','.join([j.get('ip_address') for j in i.fixed_ips]) for i in ports]),
-            '\n'.join([i.id for i in networks]), '\n'.join([i.name for i in dhcp_agents]),
+            '\n'.join([i.id for i in networks]), '\n'.join([i for i in dhcp_agents]),
             '\n'.join([i.id for i in ports]))
