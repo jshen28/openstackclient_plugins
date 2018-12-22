@@ -38,7 +38,7 @@ class GetServerNetwork(command.ShowOne):
         for port in network_client.ports(device_id=server.id):
             network = network_client.get_network(port.network_id)
             agents = network_client.network_hosting_dhcp_agents(network)
-            dhcp_agents.extend([i.host for i in agents])
+            dhcp_agents.append(','.join([i.host for i in agents]))
             ports.append(port)
             logging.debug(dir(port))
             networks.append(network)
