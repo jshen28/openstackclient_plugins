@@ -63,4 +63,4 @@ class TestOvs(command.Command):
                     print(executor.execute('%s*' % host, arp_test % (
                         in_port, address, dest_address, port.mac_address)))
                     print(executor.execute('%s*' % host,
-                                           ip_test % (in_port, address, dest_address)))
+                                           ip_test % (in_port, port.mac_address, dest_port.mac_address)))
