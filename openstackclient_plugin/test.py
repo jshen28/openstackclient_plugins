@@ -109,7 +109,7 @@ class GetServerNetwork(command.ShowOne):
             ])
 
             distributed_ports = network_client.ports(**{
-                "device_owner": "network:router_distributed_interface",
+                "device_owner": "network:router_interface_distributed",
                 "network_id": network.id
             })
 
