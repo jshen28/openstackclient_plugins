@@ -38,9 +38,11 @@ def get_flow_table(dest, port):
     in_port = executor.execute(host, 'ovs-vsctl get interface qvo%s ofport' % port.id[0:11]).strip()
     dl_vlan = executor.execute(host, 'ovs-vsctl get port qvo%s tag' % port.id[0:11]).strip()
     mac = port.mac_address
-    cmd_br_int = "ovs-ofctl dump-flows br-int | grep -P 'in_port=%s,|dl_vlan=%s,|dl_src=%s'" % (in_port, dl_vlan, mac)
+    cmd_br_int = "ovs-ofctl dump-flows br-int | grep -P '(in_port=%s,|dl_vlan=%s,).*(?(?=dl_src)dl_src=%s)?'" % (
+        in_port, dl_vlan, mac)
     # assume patch-int id is 1
-    cmd_br_tun = "ovs-ofctl dump-flows br-tun | grep -P 'in_port=%s,|dl_vlan=%s,|dl_src=%s'" % ('1', dl_vlan, mac)
+    cmd_br_tun = "ovs-ofctl dump-flows br-tun | grep -P '(in_port=%s,|dl_vlan=%s,).*(?(?=dl_src)dl_src=%s')?" % (
+        '1', dl_vlan, mac)
     return '\n'.join([
         "br-int",
         executor.execute(host, cmd_br_int),
