@@ -60,9 +60,13 @@ class TestOvs(command.Command):
                 if address:
                     dest_address = dest_port.fixed_ips[0].get('ip_address')
                     in_port = executor.execute('%s*' % host, 'ovs-vsctl get interface qvo%s ofport' % port.id[0:11])
+
                     print('------test arp packet------')
                     print(executor.execute('%s*' % host, arp_test % (
                         in_port, address, dest_address, port.mac_address)))
+                    print('------test arp packet------')
+
                     print('------test ip packet------')
                     print(executor.execute('%s*' % host,
                                            ip_test % (in_port, port.mac_address, dest_port.mac_address)))
+                    print('------test ip packet------')
