@@ -32,16 +32,16 @@ class PepperWrapper(object):
         return "\n".join(res_list)
 
 
-def get_flow_table(dest, port):
+def get_flow_table(dest, port, prefix='qvo'):
     executor = PepperWrapper()
     host = "%s*" % dest
-    in_port = executor.execute(host, 'ovs-vsctl get interface qvo%s ofport' % port.id[0:11]).strip()
-    dl_vlan = executor.execute(host, 'ovs-vsctl get port qvo%s tag' % port.id[0:11]).strip()
+    in_port = executor.execute(host, 'ovs-vsctl get interface %s%s ofport' % (prefix, port.id[0:11])).strip()
+    dl_vlan = executor.execute(host, 'ovs-vsctl get port %s%s tag' % (prefix, port.id[0:11])).strip()
     mac = port.mac_address
-    cmd_br_int = "ovs-ofctl dump-flows br-int | grep -P '(in_port=%s[,\\s]|dl_vlan=%s,).*(?(?=dl_src)dl_src=%s)?'" % (
+    cmd_br_int = "ovs-ofctl dump-flows br-int | grep -P '(in_port=%s[, ]|dl_vlan=%s[, ]).*(?(?=dl_src)dl_src=%s)'" % (
         in_port, dl_vlan, mac)
     # assume patch-int id is 1
-    cmd_br_tun = "ovs-ofctl dump-flows br-tun | grep -P '(in_port=%s[,\\s]|dl_vlan=%s,).*(?(?=dl_src)dl_src=%s)?'" % (
+    cmd_br_tun = "ovs-ofctl dump-flows br-tun | grep -P '(in_port=%s[, ]|dl_vlan=%s[, ]).*(?(?=dl_src)dl_src=%s)'" % (
         '1', dl_vlan, mac)
     return '\n'.join([
         "br-int",
@@ -117,7 +117,7 @@ class GetServerNetwork(command.ShowOne):
 
             if parsed_args.print_flowrules:
                 for dp in distributed_ports:
-                    router_flowrules.append(get_flow_table(dest, dp))
+                    router_flowrules.append(get_flow_table(dest, dp, prefix='qr-'))
 
             ports.append(port)
             logging.debug(dir(port))
