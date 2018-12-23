@@ -64,10 +64,10 @@ class PepperExecutor(object):
         :return: generator of salt cmd result
         """
 
-        os.environ['SALTAPI_URL'] = self.uri
-        os.environ['SALTAPI_EAUTH'] = self.eauth
-        os.environ['SALTAPI_USER'] = self.user
-        os.environ['SALTAPI_PASS'] = self.passwd
+        # os.environ['SALTAPI_URL'] = self.uri
+        # os.environ['SALTAPI_EAUTH'] = self.eauth
+        # os.environ['SALTAPI_USER'] = self.user
+        # os.environ['SALTAPI_PASS'] = self.passwd
 
         # manually assemble pass-in values
         if not isinstance(cmd, (list, tuple)):
@@ -85,10 +85,7 @@ class PepperExecutor(object):
         for exit_code, result in cli.run():
             if exit_code == 0:
                 for i, j in json.loads(result).get('return', [{}])[0].items():
-                    if int(j) == 0:
-                        result_list.append({i: j})
-                    else:
-                        raise Exception('error while executing command')
+                    result_list.append(j)
             else:
                 raise Exception('error while executing command')
         return result_list
