@@ -26,7 +26,7 @@ class PepperWrapper(object):
         pass
 
     def execute(self, dest, *cmd):
-        cmd_list = [dest].append(cmd)
+        cmd_list = [dest, 'cmd.run'] + list(cmd)
         executor = PepperExecutor()
         res_list = executor.execute_return_exit_code(cmd_list)
         return "\n".join(res_list)
@@ -52,7 +52,7 @@ class GetServerNetwork(command.ShowOne):
         )
 
         pepper_executor = PepperWrapper()
-        logging.info(pepper_executor.execute('cfg01*', 'pillar.items'))
+        logging.info(pepper_executor.execute('cmp001*', 'ovs-vsctl show'))
 
         # assume that server got single nic
         # and network got a single subnet
