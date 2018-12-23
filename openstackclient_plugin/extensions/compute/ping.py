@@ -40,4 +40,4 @@ class PingServer(command.Command):
             for ip in fixed_ips:
                 address = ip.get('ip_address', None)
                 if address:
-                    print(executor.execute('%s*' % host, 'ip ntens exec qdhcp-%s ping -c 3 %s' % (network_id, address)))
+                    print(executor.execute('%s*' % host, 'ip netns exec qdhcp-%s ping -c 3 %s' % (network_id, address)))
