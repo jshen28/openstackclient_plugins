@@ -61,8 +61,8 @@ class GetServerNetwork(command.ShowOne):
         )
         parser.add_argument(
             "--print-flowrules",
-            action="store_false",
-            default=True,
+            action="store_true",
+            default=False,
             help=_("print all flowrules")
         )
         return parser
