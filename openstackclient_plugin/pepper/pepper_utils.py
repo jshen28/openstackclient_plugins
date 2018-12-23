@@ -5,7 +5,6 @@ import json
 
 
 class PepperExecutor(object):
-
     def __init__(self, uri=None, eauth='pam', user='salt', passwd=None):
         """
         https://github.com/saltstack/pepper
@@ -89,3 +88,14 @@ class PepperExecutor(object):
             else:
                 raise Exception('error while executing command')
         return result_list
+
+
+class PepperWrapper(object):
+    def __init__(self):
+        pass
+
+    def execute(self, dest, *cmd):
+        cmd_list = [dest, 'cmd.run'] + list(cmd)
+        executor = PepperExecutor()
+        res_list = executor.execute_return_exit_code(cmd_list)
+        return "\n".join(res_list)
