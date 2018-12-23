@@ -35,8 +35,8 @@ class PepperWrapper(object):
 def get_flow_table(dest, port):
     executor = PepperWrapper()
     host = "%s*" % dest
-    in_port = executor.execute(host, 'ovs-vsctl get interface qvo%s ofport' % port.id[0:12]).strip()
-    dl_vlan = executor.execute(host, 'ovs-vsctl get port qvo%s tag' % port.id[0:12]).strip()
+    in_port = executor.execute(host, 'ovs-vsctl get interface qvo%s ofport' % port.id[0:11]).strip()
+    dl_vlan = executor.execute(host, 'ovs-vsctl get port qvo%s tag' % port.id[0:11]).strip()
     mac = port.mac_address
     cmd_br_int = "ovs-ofctl dump-flows br-int | grep -P 'in_port=%s|dl_vlan=%s|dl_src=%s'" % (in_port, dl_vlan, mac)
     # assume patch-int id is 1
@@ -60,7 +60,7 @@ class GetServerNetwork(command.ShowOne):
         parser.add_argument(
             "--print-flowrules",
             action="store_false",
-            const=True,
+            default=True,
             help=_("print all flowrules")
         )
         return parser
