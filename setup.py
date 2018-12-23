@@ -18,7 +18,8 @@ setup(
     entry_points={
         "openstack.identity.v3": [
             "get_server_networking=openstackclient_plugin.test:GetServerNetwork",
-            "ping_server=openstackclient_plugin.extensions.compute.ping:PingServer"
+            "ping_server=openstackclient_plugin.extensions.compute.ping:PingServer",
+            "test_ovs=openstackclient_plugin.extensions.compute.ping:TestOvs"
         ]
     },
     zip_safe=False,
