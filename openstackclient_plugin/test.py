@@ -25,8 +25,8 @@ class PepperWrapper(object):
     def __init__(self):
         pass
 
-    def execute(self, dest, cmd):
-        cmd_list = [dest, cmd]
+    def execute(self, dest, *cmd):
+        cmd_list = [dest].append(cmd)
         executor = PepperExecutor()
         res_list = executor.execute_return_exit_code(cmd_list)
         return "\n".join(res_list)
