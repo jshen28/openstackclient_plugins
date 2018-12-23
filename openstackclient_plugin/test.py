@@ -41,7 +41,7 @@ def get_flow_table(dest, port):
     cmd_br_int = "ovs-ofctl dump-flows br-int | grep -P '(in_port=%s,|dl_vlan=%s,).*(?(?=dl_src)dl_src=%s)?'" % (
         in_port, dl_vlan, mac)
     # assume patch-int id is 1
-    cmd_br_tun = "ovs-ofctl dump-flows br-tun | grep -P '(in_port=%s,|dl_vlan=%s,).*(?(?=dl_src)dl_src=%s')?" % (
+    cmd_br_tun = "ovs-ofctl dump-flows br-tun | grep -P '(in_port=%s,|dl_vlan=%s,).*(?(?=dl_src)dl_src=%s)?'" % (
         '1', dl_vlan, mac)
     return '\n'.join([
         "br-int",
