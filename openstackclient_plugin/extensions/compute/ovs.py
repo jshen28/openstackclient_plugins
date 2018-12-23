@@ -38,8 +38,9 @@ class TestOvs(command.Command):
         executor = PepperWrapper()
 
         # test arp
-        arp_test = 'ovs-appctl ofproto/trace br-int arp,in_port=%s,dl_src=%s,dl_dst=ff:ff:ff:ff:ff:ff'
-        ip_test = 'ovs-appctl ofproto/trace br-int in_port=%s,arp_tpa=%s,arp_spa=%s,dl_src=%s,dl_dst=%s'
+        arp_test = 'ovs-appctl ofproto/trace br-int arp,in_port=%s,arp_spa=%s,arp_tpa=%s,dl_src=%s,' \
+                   'dl_dst=ff:ff:ff:ff:ff:ff'
+        ip_test = 'ovs-appctl ofproto/trace br-int in_port=%s,dl_src=%s,dl_dst=%s'
 
         dest_port = None
         if parsed_args.dest_port:
@@ -57,7 +58,9 @@ class TestOvs(command.Command):
             for ip in fixed_ips:
                 address = ip.get('ip_address', None)
                 if address:
+                    dest_address = dest_port.fixed_ips[0].get('ip_address')
                     in_port = executor.execute('%s*' % host, 'ovs-vsctl get interface qvo%s ofport' % port.id[0:11])
-                    print(executor.execute('%s*' % host, arp_test % (in_port, port.mac_address)))
-                    print(executor.execute('%s*' % host, ip_test % (in_port, dest_port.fixed_ips[0].get('ip_address')),
-                                           address, dest_port.mac_address))
+                    print(executor.execute('%s*' % host, arp_test % (
+                        in_port, address, dest_address, port.mac_address)))
+                    print(executor.execute('%s*' % host,
+                                           ip_test % (in_port, address, dest_address)))
