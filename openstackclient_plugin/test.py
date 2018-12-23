@@ -10,6 +10,7 @@ from osc_lib.cli import parseractions
 from osc_lib.command import command
 from osc_lib import exceptions
 from osc_lib import utils
+from openstackclient_plugin.pepper.pepper_utils import PepperExecutor
 from oslo_utils import timeutils
 import six
 
@@ -20,8 +21,18 @@ def get_router(client_manager, router):
     return client_manager.get_router(router)
 
 
-class GetServerNetwork(command.ShowOne):
+class PepperWrapper(object):
+    def __init__(self):
+        pass
 
+    def execute(self, dest, cmd):
+        cmd_list = [dest, cmd]
+        executor = PepperExecutor()
+        res_list = executor.execute_return_exit_code(cmd_list)
+        return "\n".join(res_list)
+
+
+class GetServerNetwork(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(GetServerNetwork, self).get_parser(prog_name)
         parser.add_argument(
@@ -40,6 +51,9 @@ class GetServerNetwork(command.ShowOne):
             getattr(server, 'OS-EXT-SRV-ATTR:instance_name', None)
         )
 
+        pepper_executor = PepperWrapper()
+        logging.info(pepper_executor.execute('cfg01*', 'pillar.items'))
+
         # assume that server got single nic
         # and network got a single subnet
         ports, networks, dhcp_ports, dhcp_agents, routers = list(), list(), list(), list(), list()
@@ -48,7 +62,7 @@ class GetServerNetwork(command.ShowOne):
             agents = network_client.network_hosting_dhcp_agents(network)
             dhcp_agents.append(','.join([i.host for i in agents]))
 
-            # generalize to multiple subnets situation
+            # fixme generalize to multiple subnets situation
             dhcp_ports.extend([(i.binding_host_id, i.id, i.mac_address) for i in network_client.ports(**{
                 "device_owner": "network:dhcp",
                 "network_id": network.id

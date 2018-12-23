@@ -12,7 +12,8 @@ setup(
     description='test openstackclient plugin',
     version=str(random.randint(10, 1000)),
     install_requires=[
-        "openstackclient"
+        "openstackclient",
+        "salt-pepper==0.5.2"
     ],
     entry_points={
         "openstack.identity.v3": [
